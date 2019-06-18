@@ -300,7 +300,7 @@ _lp_source_config()
     # Default values (globals)
     LP_BATTERY_THRESHOLD=${LP_BATTERY_THRESHOLD:-75}
     LP_LOAD_THRESHOLD=${LP_LOAD_THRESHOLD:-60}
-    LP_TEMP_THRESHOLD=${LP_TEMP_THRESHOLD:-60}
+    LP_TEMP_THRESHOLD=${LP_TEMP_THRESHOLD:-40}
     LP_RUNTIME_THRESHOLD=${LP_RUNTIME_THRESHOLD:-2}
     LP_PATH_LENGTH=${LP_PATH_LENGTH:-35}
     LP_PATH_KEEP=${LP_PATH_KEEP:-2}
@@ -1505,17 +1505,27 @@ if (( LP_ENABLE_TEMP )); then
 
     # Backends for TEMP. Each backend must return the result in $temperature.
 
-    # Implementation using lm-sensors
+    # workaround to allow display of TEMP on sunxi orange pi armhf devices
     _lp_temp_sensors()
     {
-        # Return the hottest system temperature we get through the sensors command
-        # Only the integer part is retained
         local -i i
-        for i in $(sensors -u |
-                sed -n 's/^  temp[0-9][0-9]*_input: \([0-9]*\)\..*$/\1/p'); do
+        for i in $(jrm=$(</sys/class/thermal/thermal_zone0/temp) | 
+            echo $(($jrm/1000)) );do
             (( $i > ${temperature:-0} )) && temperature=i
         done
     }
+
+   # the following is original code, comments marked with '#x' are the original author's
+   #x Implementation using lm-sensors
+   # {
+        #x Return the hottest system temperature we get through the sensors command
+        #x Only the integer part is retained
+   #     local -i i
+   #     for i in $(sensors -u |
+   #             sed -n 's/^  temp[0-9][0-9]*_input: \([0-9]*\)\..*$/\1/p'); do
+   #         (( $i > ${temperature:-0} )) && temperature=i
+   #     done
+   # }
 
     # Implementation using 'acpi -t'
     _lp_temp_acpi()
