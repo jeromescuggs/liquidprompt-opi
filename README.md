@@ -1,6 +1,15 @@
 Liquid Prompt — a useful adaptive prompt for Bash & zsh
 =======================================================
 
+## (orange pi zero edition)
+this fork is for those who would like to use LP on embedded devices, specifically 
+Orange Pi devices utilizing the H2+/H3 ARM cpu. luckily for me, this doesn't mean
+doing too much work thanks to the stellar contributions and efforts of nojhan and 
+others, but some functions require finding more primitive workarounds where traditional 
+x86 solutions might break. honestly the changes are so small it might not even be worth forking,
+but i figured it would be a time-saver to host the code here, as i flash a fresh OPi environment 
+at least once a week.
+
 Liquid Prompt gives you a nicely displayed prompt with useful information
 when you need it. It shows you what you need when you need it.
 You will notice what changes *when* it changes, saving time and frustration.
